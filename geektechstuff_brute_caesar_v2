@@ -1,0 +1,63 @@
+#!/usr/bin/python3
+# geektechstuff
+# brute force Caesar
+
+# encrypted string to brute force
+enc_string = 'qgmj skkayfewfl, addmkljagmk ugvw tjwscwj, ak lg jwkwsjuz s uahzwj lzsl zskh32!n3adu73y2xlk2k37i3-k839xxe4052p56jko5\zaep525mmg4a50s$3qj4m-065?r5h/o5cz.?u'
+
+def alphabet():
+    # letters of alphabet (English)
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    return(letters)
+
+def dictionary():
+    # dictonary
+    dictionary = open('/Users/gary/Documents/caesar_brute/dictionary.txt')
+    #list_of_words = {}
+    list_of_words = []
+    for word in dictionary.read().split('\n'):
+        list_of_words.append(word)
+    # close dictionary
+    dictionary.close()
+    return(list_of_words)
+
+
+def brute_force(enc_string):
+    best_match = 0
+    best_match_text = ""
+    best_cipher = 0
+    # loop to brute
+    x = 0
+    while x < 26:
+        x = x + 1 
+        stringtodecrypt=enc_string
+        stringtodecrypt=stringtodecrypt.lower()
+        ciphershift=int(x)
+        stringdecrypted=""
+        letters = alphabet()
+        for character in stringtodecrypt:
+            position = letters.find(character)
+            newposition = position-ciphershift
+            if character in letters:
+                stringdecrypted = stringdecrypted + letters[newposition]
+            else:
+                stringdecrypted = stringdecrypted + character
+
+        detected_words = 0
+    
+        for word in stringdecrypted.split(' '):
+            word = word.strip(" ")
+            word = word.strip(",")
+            if word in dictionary():
+                detected_words = detected_words + 1
+
+        if detected_words > best_match:
+            best_match_text = stringdecrypted
+            best_cipher = str(ciphershift)
+            number_of_detected_words = detected_words
+
+    result = "Best matched text:",best_match_text,"With Ciphershift of:",best_cipher," And",number_of_detected_words,"detected words."
+    return(result)
+
+answer = brute_force(enc_string)
+print(answer)
